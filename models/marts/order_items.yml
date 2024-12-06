@@ -110,3 +110,39 @@ metrics:
     type: cumulative
     type_params:
       measure: revenue
+
+saved_queries:
+  - name: order_metrics
+    label: order metrics
+    description: Relevant order metrics
+    query_params:
+      metrics:
+        - orders
+        - large_order
+        - food_orders
+        - order_total
+      group_by:
+        - Entity('order_id')
+        - TimeDimension('metric_time', 'day')
+        - Dimension('customer__customer_name')
+        - Dimension('customer__customer_type')
+        - TimeDimension('customer__first_ordered_at', 'day')
+    exports:
+      - name: order_data_key_metrics
+        config:
+          export_as: table
+    config:
+      cache:
+        enabled: true
+  - name: weekly_revenue
+    label: weekly revenue
+    description: Weekly revenue
+    query_params:
+      metrics:
+        - revenue
+      group_by:
+        - TimeDimension('metric_time', 'week')
+    exports:
+      - name: weekly_revenue
+        config:
+          export_as: table
